@@ -5,24 +5,24 @@ namespace Arcoders;
 class SessionManager
 {
 
-    protected static $loaded = false;
-    protected static $data = array();
+    protected $data = array();
+    protected $driver;
 
-    protected static function load()
+    public function __construct(SessionFileDriver $driver)
     {
-        if (static::$loaded) return;
+        $this->driver = $driver;
 
-        static::$data = SessionFileDriver::load();
-
-        static::$loaded = true;
+        $this->load();
     }
 
-    public static function get($key)
+    protected function load()
     {
+        $this->data = $this->driver->load();
+    }
 
-        static::load();
-
-        return static::$data[$key] ?? null;
+    public function get($key)
+    {
+        return $this->data[$key] ?? null;
     }
 
 }

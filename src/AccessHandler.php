@@ -6,10 +6,24 @@ use Arcoders\Authenticator as Auth;
 
 class AccessHandler
 {
+    /**
+    * @var \Arcoders\Authenticator
+    */
 
-    public static function check($role)
+    protected $auth;
+
+    /**
+    * @param \Arcoders\Authenticator $auth
+    */
+
+    public function __construct(Auth $auth)
     {
-        return Auth::check() && Auth::user()->role === $role;
+        $this->auth = $auth;
+    }
+
+    public function check($role)
+    {
+        return $this->auth->check() && $this->auth->user()->role === $role;
     }
 
 }

@@ -7,20 +7,35 @@ use Arcoders\SessionManager as Session;
 class Authenticator
 {
 
-    protected static $user;
+    /**
+    * @var \Arcoders\SessionManager
+    */
 
-    public static function check()
+    protected $session;
+
+    protected $user;
+
+    /**
+    * @param \Arcoders\SessionManager $session
+    */
+
+    public function __construct(Session $session)
     {
-        return static::user() != null;
+        $this->session = $session;
     }
 
-    public static function user()
+    public function check()
     {
-        if (static::$user != null) return static::$user;
+        return $this->user() != null;
+    }
 
-        $data = Session::get('user_data');
+    public function user()
+    {
+        if ($this->user != null) return $this->user;
 
-        if (!is_null($data)) return static::$user = new User($data);
+        $data = $this->session->get('user_data');
+
+        if (!is_null($data)) return $this->user = new User($data);
 
         return null;
     }
