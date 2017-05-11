@@ -4,7 +4,7 @@ namespace Arcoders;
 
 use Arcoders\SessionManager as Session;
 
-class Authenticator
+class Authenticator implements AuthenticatorInterface
 {
 
     /**

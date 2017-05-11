@@ -2,7 +2,7 @@
 
 namespace Arcoders;
 
-class SessionFileDriver
+class SessionFileDriver implements SessionDriverInterface
 {
 
     public function load()
