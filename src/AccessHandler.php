@@ -2,19 +2,21 @@
 
 namespace Arcoders;
 
+use Arcoders\Authenticator as Auth;
+
 class AccessHandler
 {
     /**
-    * @var \Arcoders\AuthenticatorInterface
+    * @var \Arcoders\Authenticator
     */
 
     protected $auth;
 
     /**
-    * @param \Arcoders\AuthenticatorInterface $auth
+    * @param \Arcoders\Authenticator $auth
     */
 
-    public function __construct(AuthenticatorInterface $auth)
+    public function __construct(Auth $auth)
     {
         $this->auth = $auth;
     }
