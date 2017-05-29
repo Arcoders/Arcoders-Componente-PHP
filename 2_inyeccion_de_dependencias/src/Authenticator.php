@@ -13,6 +13,10 @@ class Authenticator implements AuthenticatorInterface
 
     protected $session;
 
+
+    /**
+    * @var \Arcoders\User
+    */
     protected $user;
 
     /**
