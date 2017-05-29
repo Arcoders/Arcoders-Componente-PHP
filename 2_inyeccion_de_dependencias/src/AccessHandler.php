@@ -2,28 +2,28 @@
 
 namespace Arcoders;
 
-use Arcoders\Authenticator as Auth;
-
 class AccessHandler
 {
-    /**
-    * @var \Arcoders\Authenticator
-    */
 
+    /**
+     * @var \Arcoders\AuthenticatorInterface
+     */
     protected $auth;
 
     /**
-    * @param \Arcoders\Authenticator $auth
-    */
-
-    public function __construct(Auth $auth)
+     * @param \Arcoders\AuthenticatorInterface $auth
+     */
+    public function __construct(AuthenticatorInterface $auth)
     {
         $this->auth = $auth;
     }
 
-    public function check($role)
+    public function check($roles)
     {
-        return $this->auth->check() && $this->auth->user()->role === $role;
+        if (!is_array($roles)) {
+            $roles = explode('|', $roles);
+        }
+        return $this->auth->check() && in_array($this->auth->user()->role, $roles);
     }
 
 }
