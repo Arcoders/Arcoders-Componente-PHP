@@ -1,5 +1,7 @@
 <?php
 
+use Arcoders\Container;
+
 function view($template, array $vars = array())
 {
     extract($vars);
@@ -17,7 +19,7 @@ function view($template, array $vars = array())
 
 function abort404()
 {
-    global $access;
+    $access = Container::getInstance()->access();
 
     http_response_code(404);
 

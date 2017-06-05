@@ -1,11 +1,13 @@
 <?php
 
+use Arcoders\Container;
+
 require(__DIR__.'/../bootstrap/start.php');
 
 function teacherController()
 {
 
-    global $access;
+    $access = Container::getInstance()->access();
 
     if (! $access->check('teacher')) abort404();
 

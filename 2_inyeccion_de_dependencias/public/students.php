@@ -1,7 +1,16 @@
 <?php
 
+use Arcoders\Container;
+
 require(__DIR__.'/../bootstrap/start.php');
 
-if (! $access->check('students')) abort404();
+function studentController()
+{
+    $access = Container::getInstance()->access();
 
-view('students', compact('access'));
+    if (! $access->check('students')) abort404();
+
+    view('students', compact('access'));
+}
+
+return studentController();
