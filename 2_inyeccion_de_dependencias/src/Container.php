@@ -2,6 +2,8 @@
 
 namespace Arcoders;
 
+use Closure;
+
 class Container
 {
 
@@ -26,7 +28,7 @@ class Container
 
         $resolver = $this->bindings[$name]['resolver'];
 
-        $object = $resolver($this);
+        $object = ($resolver instanceof Closure) ? $resolver($this) : new $resolver;
 
         return $object;
     }

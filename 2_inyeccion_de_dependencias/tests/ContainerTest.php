@@ -28,4 +28,19 @@ class ContainerTest extends TestCase
         $this->assertSame($stdClass, $container->make('key'));
     }
 
+    public function test_bind_from_class_name()
+    {
+        $container = new Container();
+
+        $container->bind('key', 'Arc');
+
+        $this->assertInstanceOf('Arc', $container->make('key'));
+    }
+
+}
+
+// ------------------------------------------------------------------
+
+class Arc {
+
 }
