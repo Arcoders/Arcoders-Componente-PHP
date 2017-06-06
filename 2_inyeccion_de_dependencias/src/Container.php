@@ -3,6 +3,7 @@
 namespace Arcoders;
 
 use Closure;
+use ReflectionClass;
 
 class Container
 {
@@ -28,9 +29,34 @@ class Container
 
         $resolver = $this->bindings[$name]['resolver'];
 
-        $object = ($resolver instanceof Closure) ? $resolver($this) : new $resolver;
+        $object = ($resolver instanceof Closure) ? $resolver($this) : $this->build($resolver);
 
         return $object;
+    }
+
+    public function build($name)
+    {
+        $reflection = new ReflectionClass($name);
+
+        if(!$reflection->isInstantiable()) {
+            throw new InvalidArgumentException("$name is not instantiable");
+        }
+
+        $constructor = $reflection->getConstructor();
+
+        if (is_null($constructor)) return new $name;
+
+        $constructorParameters = $constructor->getParameters();
+
+        $arguments = array();
+
+        foreach ($constructorParameters as $constructorParameter) {
+            $parameterClassName = $constructorParameter->getClass()->getName();
+
+            $arguments[] = new $parameterClassName;
+        }
+
+        return $reflection->newInstanceArgs($arguments);
     }
 
 }

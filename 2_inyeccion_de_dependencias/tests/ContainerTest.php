@@ -32,15 +32,35 @@ class ContainerTest extends TestCase
     {
         $container = new Container();
 
-        $container->bind('key', 'Arc');
+        $container->bind('key', 'StdClass');
 
-        $this->assertInstanceOf('Arc', $container->make('key'));
+        $this->assertInstanceOf('StdClass', $container->make('key'));
+    }
+
+    public function test_bind_with_automatic_resolution()
+    {
+        $container = new Container();
+
+        $container->bind('arc', 'Arc');
+
+        $this->assertInstanceOf('Arc', $container->make('arc'));
     }
 
 }
 
 // ------------------------------------------------------------------
 
-class Arc {
+class Arc
+{
 
+    public function __construct(Coders $coders)
+    {
+
+    }
+
+}
+
+class Coders
+{
+    // ...
 }
