@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Arcoders\Container;
+use Arcoders\{Container, ContainerException};
 
 class ContainerTest extends TestCase
 {
@@ -46,6 +46,19 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf('Arc', $container->make('arc'));
     }
 
+    /**
+     * @expectedException Arcoders\ContainerException
+     * @expectedExceptionMessage Unable to build [Asus]: Class Rog does not exist
+     */
+    public function test_expected_container_exeption_if_dependency_does_not_exist()
+    {
+        $container = new Container();
+
+        $container->bind('asus', 'Asus');
+
+        $container->make('asus');
+    }
+
 }
 
 // ------------------------------------------------------------------
@@ -53,7 +66,7 @@ class ContainerTest extends TestCase
 class Arc
 {
 
-    public function __construct(Coders $coders)
+    public function __construct(Coders $coders, Meknas $meknas)
     {
 
     }
@@ -63,4 +76,19 @@ class Arc
 class Coders
 {
     // ...
+}
+
+class Meknas
+{
+    // ...
+}
+
+class Asus
+{
+
+    public function __construct(Rog $Gamer)
+    {
+
+    }
+
 }
