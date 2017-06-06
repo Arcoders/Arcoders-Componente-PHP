@@ -5,61 +5,30 @@ namespace Arcoders;
 class Container
 {
 
-    protected $shared = array();
-    protected static $container;
+    protected $bindings = [];
+    protected $shared = [];
 
-    public static function getInstance()
+    public function bind($name, $resolver)
     {
-        if (static::$container == null) {
-            static::$container = new Container;
-        }
-
-        return static::$container;
+        $this->bindings[$name] = [
+            'resolver' => $resolver
+        ];
     }
 
-    public static function setContainer(Container $container)
+    public function instance($name, $object)
     {
-        static::$container = $container;
+        $this->shared[$name] = $object;
     }
 
-    public static function clearContainer()
+    public function make($name)
     {
-        static::$container = null;
-    }
+        if (isset ($this->shared[$name])) return $this->shared[$name];
 
-    public function session()
-    {
-        if (isset ($this->shared['session'])) {
-            return $this->shared['session'];
-        }
+        $resolver = $this->bindings[$name]['resolver'];
 
-        $data = array(
-            'user_data' => array(
-                'name' => 'Ismael Haytam',
-                'role' => 'teacher'
-            )
-        );
+        $object = $resolver($this);
 
-        $driver = new SessionArrayDriver($data);
-        return $this->shared['session'] = new SessionManager($driver);
-    }
-
-    public function auth()
-    {
-        if (isset ($this->shared['auth'])) {
-            return $this->shared['auth'];
-        }
-
-        return $this->shared['auth'] = new Authenticator($this->session());
-    }
-
-    public function access()
-    {
-        if (isset ($this->shared['access'])) {
-            return $this->shared['access'];
-        }
-
-        return $this->shared['access'] = new AccessHandler($this->auth());
+        return $object;
     }
 
 }
