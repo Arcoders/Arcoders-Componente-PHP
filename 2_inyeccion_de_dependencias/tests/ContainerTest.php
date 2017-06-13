@@ -59,8 +59,34 @@ class ContainerTest extends TestCase
         $container->make('asus');
     }
 
+    public function test_container_make_with_arguments()
+    {
+        $container = new Container();
+
+        $this->assertInstanceOf(
+            MailServ::class,
+            $container->make('MailServ', [
+                'url' => 'arcoders.org',
+                'key' => 'secret'
+            ])
+        );
+    }
+
 }
 
+// ------------------------------------------------------------------
+class MailServ {
+
+    private $url;
+    private $key;
+
+    public function __construct($url, $key)
+    {
+        $this->url = $url;
+        $this->key = $key;
+    }
+
+}
 // ------------------------------------------------------------------
 
 class Arc

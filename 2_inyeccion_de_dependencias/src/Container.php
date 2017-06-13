@@ -25,18 +25,18 @@ class Container
         $this->shared[$name] = $object;
     }
 
-    public function make($name)
+    public function make($name, array $arguments = array())
     {
         if (isset ($this->shared[$name])) return $this->shared[$name];
 
-        $resolver = $this->bindings[$name]['resolver'];
+        $resolver = (isset ($this->bindings[$name])) ? $this->bindings[$name]['resolver'] : $name;
 
-        $object = ($resolver instanceof Closure) ? $resolver($this) : $this->build($resolver);
+        $object = ($resolver instanceof Closure) ? $resolver($this) : $this->build($resolver, $arguments);
 
         return $object;
     }
 
-    public function build($name)
+    public function build($name, array $arguments = array())
     {
         $reflection = new ReflectionClass($name);
 
@@ -50,20 +50,33 @@ class Container
 
         $constructorParameters = $constructor->getParameters();
 
-        $arguments = array();
+        $dependencies = array();
 
         foreach ($constructorParameters as $constructorParameter) {
 
+            $ParameterName = $constructorParameter->getName();
+
+            if (isset ($arguments[$ParameterName])) {
+                $dependencies[] = $arguments[$ParameterName];
+                continue;
+            }
+
             try {
-                $parameterClassName = $constructorParameter->getClass()->getName();
+                $parameterClass = $constructorParameter->getClass();
             } catch (ReflectionException $e) {
                 throw new ContainerException("Unable to build [$name]: " . $e->getMessage(), null, $e);
             }
 
-            $arguments[] = new $parameterClassName;
+            if ($parameterClass != null) {
+                $parameterClassName = $parameterClass->getName();
+                $dependencies[] = $this->build($parameterClassName);
+            } else {
+                throw new ContainerException("Please provide the value of the parameter [$ParameterName]");
+            }
+
         }
 
-        return $reflection->newInstanceArgs($arguments);
+        return $reflection->newInstanceArgs($dependencies);
 
     }
 
