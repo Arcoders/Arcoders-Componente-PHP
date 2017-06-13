@@ -28,6 +28,15 @@ class ContainerTest extends TestCase
         $this->assertSame($stdClass, $container->make('key'));
     }
 
+    public function test_singleton_instance()
+    {
+        $container = new Container();
+
+        $container->singleton('sing', 'Sing');
+
+        $this->assertSame($container->make('sing'), $container->make('sing'));
+    }
+
     public function test_bind_from_class_name()
     {
         $container = new Container();

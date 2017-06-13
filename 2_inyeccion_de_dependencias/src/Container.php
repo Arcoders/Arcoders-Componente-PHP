@@ -13,16 +13,22 @@ class Container
     protected $bindings = [];
     protected $shared = [];
 
-    public function bind($name, $resolver)
+    public function bind($name, $resolver, $shared = false)
     {
         $this->bindings[$name] = [
-            'resolver' => $resolver
+            'resolver' => $resolver,
+            'shared' => $shared
         ];
     }
 
     public function instance($name, $object)
     {
         $this->shared[$name] = $object;
+    }
+
+    public function singleton($name, $resolver)
+    {
+        $this->bind($name, $resolver, true);
     }
 
     public function make($name, array $arguments = array())
