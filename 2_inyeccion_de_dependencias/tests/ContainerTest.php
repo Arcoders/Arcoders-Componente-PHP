@@ -32,9 +32,9 @@ class ContainerTest extends TestCase
     {
         $container = new Container();
 
-        $container->singleton('sing', 'Sing');
+        $container->singleton('arc', 'Arc');
 
-        $this->assertSame($container->make('sing'), $container->make('sing'));
+        $this->assertSame($container->make('arc'), $container->make('arc'));
     }
 
     public function test_bind_from_class_name()

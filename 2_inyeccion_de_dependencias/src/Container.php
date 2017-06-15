@@ -35,9 +35,17 @@ class Container
     {
         if (isset ($this->shared[$name])) return $this->shared[$name];
 
-        $resolver = (isset ($this->bindings[$name])) ? $this->bindings[$name]['resolver'] : $name;
+        if (isset ($this->bindings[$name])) {
+            $resolver = $this->bindings[$name]['resolver'];
+            $shared = $this->bindings[$name]['shared'];
+        } else {
+            $resolver = $name;
+            $shared = false;
+        }
 
         $object = ($resolver instanceof Closure) ? $resolver($this) : $this->build($resolver, $arguments);
+
+        if ($shared) $this->shared[$name] = $object;
 
         return $object;
     }
